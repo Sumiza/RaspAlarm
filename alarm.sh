@@ -21,17 +21,17 @@ function system_disarmed_once {
 
 function system_armed {
 #    echo "Armed"
-     while [ "$ArmingTime" -ge 0 ]; do
+     while [ "$arm" -ge 0 ]; do
 
-             echo "$ArmingTime"
-             ((ArmingTime=ArmingTime-1))
+             echo "$arm"
+             ((arm=arm-1))
              sleep 0.5
-             if [ "$ArmingTime" -eq -1 ]; then
+             if [ "$arm" -eq -1 ]; then
                  system_armed_once
              fi
      done
 
-     if [ "$ArmingTime" -eq -1 ]; then
+     if [ "$arm" -eq -1 ]; then
          echo "ARMED"
          for i in "${usedpins[@]}"; do 
                 trigger=$(cat /sys/class/gpio/gpio"$i"/value)
@@ -45,32 +45,35 @@ function system_armed {
 
 function system_disarmed {
 
-     if [ "$ArmingTime" -eq -1 ]; then
+     if [ "$arm" -eq -1 ]; then
          system_disarmed_once
      fi
      echo "Not Armed"
-     ArmingTime=15
+     arm=$ArmingTime
 }
 
 function alarm_trigger {
         echo "alarm triggered..."
-        while [ $DisarmTime -ge 0 ]; do
+        while [ "$dis" -ge 0 ]; do
                 if [ -f "armed" ]; then
-                        echo "$DisarmTime" till Alarm
-                        ((DisarmTime=DisarmTime-1))
+                        echo "$dis" till Alarm
+                        ((dis=dis-1))
                         sleep 1
                 else
                         system_disarmed
-                        DisarmTime=10
+                        dis=$DisarmTime
                 fi
-                if [ $DisarmTime -eq 0 ]; then
+                if [ $dis -eq 0 ]; then
                         echo "TRIGGER REAL ALARM"
                         rm armed
+                        #after alarm reset to disarmed
                         sleep 1
                 fi
         done
 }
 
+arm=$ArmingTime
+dis=$DisarmTime
 for i in "${usedpins[@]}"; do
         raspi-gpio set "$i" ip pd
         echo "$i" > /sys/class/gpio/export
