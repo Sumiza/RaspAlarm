@@ -32,7 +32,13 @@ function system_armed {
 
      if [ "$arm" -eq -1 ]; then
          echo "ARMED"
-         cat /sys/class/gpio/gpio14/value
+         for i in "${usedpins[@]}"; do 
+                trigger=$(cat /sys/class/gpio/gpio"$i"/value)
+                if [ "$trigger" = "1" ]; then
+                        echo "TRIGGER ALARM"
+                fi
+                
+         done
      fi
 }
 
