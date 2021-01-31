@@ -32,7 +32,7 @@ function system_armed {
 
      if [ "$arm" -eq -1 ]; then
          echo "ARMED"
-         cat /sys/class/gpio/gpio4/value
+         cat /sys/class/gpio/gpio14/value
      fi
 }
 
