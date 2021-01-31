@@ -65,9 +65,8 @@ function alarm_trigger {
                 fi
                 if [ "$dis" -eq 0 ]; then
                         echo "TRIGGER REAL ALARM"
-                        rm armed
                         #after alarm reset to disarmed
-                        sleep 1
+                        system_disarmed
                         break 1
                 fi
         done
