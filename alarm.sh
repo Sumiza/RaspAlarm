@@ -20,9 +20,7 @@ function system_disarmed_once {
 }
 
 function system_armed {
-#    echo "Armed"
      while [ "$arm" -ge 0 ]; do
-
              echo "$arm"
              ((arm=arm-1))
              sleep 0.5
@@ -37,7 +35,7 @@ function system_armed {
                 trigger=$(cat /sys/class/gpio/gpio"$i"/value)
                  if [ "$trigger" = "1" ]; then
                        alarm_trigger
-                       break
+                       break 1
                 fi
          done
      fi
@@ -46,10 +44,12 @@ function system_armed {
 function system_disarmed {
 
      if [ "$arm" -eq -1 ]; then
-         system_disarmed_once
+        system_disarmed_once
+        rm armed
+        arm=$ArmingTime
+        dis=$DisarmTime
      fi
      echo "Not Armed"
-     arm=$ArmingTime
 }
 
 function alarm_trigger {
@@ -61,13 +61,14 @@ function alarm_trigger {
                         sleep 1
                 else
                         system_disarmed
-                        dis=$DisarmTime
+                        break 1
                 fi
-                if [ $dis -eq 0 ]; then
+                if [ "$dis" -eq 0 ]; then
                         echo "TRIGGER REAL ALARM"
                         rm armed
                         #after alarm reset to disarmed
                         sleep 1
+                        break 1
                 fi
         done
 }
