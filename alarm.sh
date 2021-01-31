@@ -34,10 +34,10 @@ function system_armed {
          echo "ARMED"
          for i in "${usedpins[@]}"; do 
                 trigger=$(cat /sys/class/gpio/gpio"$i"/value)
-                if [ "$trigger" = "1" ]; then
-                        echo "TRIGGER ALARM"
+                 if [ "$trigger" = "1" ]; then
+                       alarm_trigger
+                       break
                 fi
-                
          done
      fi
 }
@@ -51,6 +51,9 @@ function system_disarmed {
      arm=$ArmingTime
 }
 
+function alarm_trigger {
+        echo "alarm triggered..."
+}
 arm=$ArmingTime
 for i in "${usedpins[@]}"; do
         raspi-gpio set "$i" ip pd
@@ -61,8 +64,8 @@ done
 while :
 do
          if [ -f "armed" ]; then
-
              system_armed
+
          else
              system_disarmed
          fi
