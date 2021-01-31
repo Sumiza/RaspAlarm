@@ -2,6 +2,7 @@
 #------Settings--------
 
 ArmingTime=15
+usedpins=(14 15)
 
 #----------------------
 
@@ -31,6 +32,7 @@ function system_armed {
 
      if [ "$arm" -eq -1 ]; then
          echo "ARMED"
+         cat /sys/class/gpio/gpio4/value
      fi
 }
 
@@ -44,6 +46,12 @@ function system_disarmed {
 }
 
 arm=$ArmingTime
+for i in "${usedpins[@]}"; do
+        raspi-gpio set "$i" ip pd
+        echo "$i" > /sys/class/gpio/export
+        echo "in" > /sys/class/gpio/gpio"$i"/direction
+done
+
 while :
 do
          if [ -f "armed" ]; then
