@@ -65,7 +65,7 @@ function alarm_trigger {
                 fi
                 if [ $DisarmTime -eq 0 ]; then
                         echo "TRIGGER REAL ALARM"
-                        rm alarm
+                        rm armed
                         sleep 1
                 fi
         done
