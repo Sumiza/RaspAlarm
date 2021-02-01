@@ -20,25 +20,31 @@ function system_disarmed_once {
 }
 
 function system_armed {
-     while [ "$arm" -ge 0 ]; do
-             echo "$arm"
-             ((arm=arm-1))
-             sleep 0.5
+        if [ -f "armed" ]; then
+        
+                  while [ "$arm" -ge 0 ]; do
+                     echo "$arm"
+                     ((arm=arm-1))
+                     sleep 1
+                     if [ "$arm" -eq -1 ]; then
+                         system_armed_once
+                     fi
+                   done
+        
              if [ "$arm" -eq -1 ]; then
-                 system_armed_once
+                 echo "ARMED"
+                 for i in "${usedpins[@]}"; do 
+                        trigger=$(cat /sys/class/gpio/gpio"$i"/value)
+                         if [ "$trigger" = "1" ]; then
+                               alarm_trigger
+                               break 1
+                        fi
+                 done
              fi
-     done
-
-     if [ "$arm" -eq -1 ]; then
-         echo "ARMED"
-         for i in "${usedpins[@]}"; do 
-                trigger=$(cat /sys/class/gpio/gpio"$i"/value)
-                 if [ "$trigger" = "1" ]; then
-                       alarm_trigger
-                       break 1
-                fi
-         done
-     fi
+        else
+                arm=-1
+                system_disarmed
+        fi
 }
 
 function system_disarmed {
