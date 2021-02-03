@@ -63,7 +63,6 @@ function system_armed {
                          fi
                   done
          fi
-
 }
 
 function system_disarmed {
@@ -101,15 +100,17 @@ arm=$ArmingTime
 dis=$DisarmTime
 for i in "${usedpins[@]}"; do
          raspi-gpio set "$i" ip pu
+         sleep 1.0
          echo "$i" > /sys/class/gpio/export
+         sleep 1.0
          echo "in" > /sys/class/gpio/gpio"$i"/direction
+         sleep 1.0
 done
 
 while :
 do
           if [ -f "armed" ]; then
               system_armed
-
           else
               system_disarmed
           fi
