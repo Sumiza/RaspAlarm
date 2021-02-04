@@ -14,13 +14,6 @@ VoipMSDID=$VoipMS_DID
 VoipMSAPIUser=$VoipMS_API_User
 VoipMSAPIPass=$VoipMS_API_Password
 
-
-#echo $ArmingTime
-#echo $DisarmTime
-#echo $usedpins
-#echo $TimeBetweenMessage
-#echo "$PhoneNrs"
-
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
          echo "CANT LOAD CONFIG FILE EXITING"
          exit 1
@@ -35,7 +28,7 @@ function send_sms {
 function system_armed_once {
        echo "ARMED NOW"
        for i in "${PhoneNrsArm[@]}"; do
-                 echo "calling armed $i"
+                 echo "SMS Sent to armed $i"
                  send_sms "$i" "ECO_Alarm_Armed"
        done
        sleep 1.0
@@ -44,6 +37,10 @@ function system_armed_once {
 
 function system_disarmed_once {
        echo "Disarmed now"
+       for i in "${PhoneNrsDis[@]}"; do
+                 echo "SMS sent to disarmed $i"
+                 send_sms "$i" "ECO_Alarm_Disarmed"
+       done
        sleep 1.0
 # do stuff here when alarm deactivates, runs once.
 }
@@ -55,8 +52,12 @@ function alarm_trigger {
                   echo "$sendcount"
                   #ring siren
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
-                          echo "sending message and calling"
-                          sendcount=$TimeBetweenMessage
+                        echo "sending message and calling"
+                        for i in "${PhoneNrsAlarm[@]}"; do
+                                echo "SMS sent to ALARM $i"
+                                send_sms "$i" "ECO_Alarm_Triggered_On_Pin_$1"
+                        done
+                        sendcount=$TimeBetweenMessage
                   fi
                   ((sendcount=sendcount-1))
                   sleep 1.0
@@ -86,7 +87,7 @@ function system_armed {
                   for i in "${usedpins[@]}"; do
                           trigger=$(cat /sys/class/gpio/gpio"$i"/value)
                           if [ "$trigger" = "0" ]; then
-                                 alarm_countdown
+                                 alarm_countdown "$i"
                                  break 1
                           fi
                    done
@@ -113,7 +114,7 @@ function alarm_countdown {
                           echo "$dis" till Alarm
                           ((dis=dis-1))
                           if [ "$dis" -eq 0 ]; then
-                                  alarm_trigger
+                                  alarm_trigger "$1"
                                   break 1
                           fi
                           sleep 1
