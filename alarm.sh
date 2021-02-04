@@ -2,7 +2,7 @@
 
 #--- Load Settings from Alarm.conf
 
-source Alarm.conf
+source alarm.conf
 ArmingTime=$Arming_Time
 DisarmTime=$Disarm_Time
 usedpins=($Used_Pins)
