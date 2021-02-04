@@ -29,7 +29,7 @@ function system_armed_once {
        echo "ARMED NOW"
        for i in "${PhoneNrsArm[@]}"; do
                  echo "SMS Sent to armed $i"
-                 send_sms "$i" "ECO_Alarm_Armed"
+                 send_sms "$i" "Alarm_Armed"
        done
        sleep 1.0
        # do stuff here when alarm activates, runs once.
@@ -39,7 +39,7 @@ function system_disarmed_once {
        echo "Disarmed now"
        for i in "${PhoneNrsDis[@]}"; do
                  echo "SMS sent to disarmed $i"
-                 send_sms "$i" "ECO_Alarm_Disarmed"
+                 send_sms "$i" "Alarm_Disarmed"
        done
        sleep 1.0
 # do stuff here when alarm deactivates, runs once.
@@ -55,7 +55,7 @@ function alarm_trigger {
                         echo "sending message and calling"
                         for i in "${PhoneNrsAlarm[@]}"; do
                                 echo "SMS sent to ALARM $i"
-                                send_sms "$i" "ECO_Alarm_Triggered_On_Pin_$1"
+                                send_sms "$i" "Alarm_Triggered_On_Pin_$1"
                         done
                         sendcount=$TimeBetweenMessage
                   fi
