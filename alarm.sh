@@ -48,7 +48,7 @@ function system_disarmed_once {
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
           sendcount=$TimeBetweenMessage
-          while [  -f "armed"  ]; do
+          while ls armed* > /dev/null 2>&1; do
                   echo "$sendcount"
                   #ring siren
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
@@ -68,7 +68,7 @@ function alarm_trigger {
 
 function system_armed {
           while [ "$arm" -ge 0 ]; do
-                  if [ -f "armed" ]; then
+                  if ls armed* > /dev/null 2>&1; then
                        echo "$arm"
                        ((arm=arm-1))
                        sleep 1
@@ -98,8 +98,8 @@ function system_disarmed {
 
        if [ "$arm" -eq -1 ]; then
           system_disarmed_once
-          if [ -f "armed" ]; then
-                  rm armed
+          if ls armed* > /dev/null 2>&1; then
+                  rm armed*
           fi
           arm=$ArmingTime
           dis=$DisarmTime
@@ -110,7 +110,7 @@ function system_disarmed {
 function alarm_countdown {
           echo "alarm countdown..."
           while [ "$dis" -ge 0 ]; do
-                  if [ -f "armed" ]; then
+                  if ls armed* > /dev/null 2>&1; then
                           echo "$dis" till Alarm
                           ((dis=dis-1))
                           if [ "$dis" -eq 0 ]; then
@@ -137,7 +137,7 @@ done
 
 while :
 do
-           if [ -f "armed" ]; then
+           if ls armed* > /dev/null 2>&1; then
                system_armed
            else
                system_disarmed
