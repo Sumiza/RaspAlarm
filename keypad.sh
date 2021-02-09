@@ -36,7 +36,6 @@ do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
                                 echo "$o - $i"
-                                echo "${inpad0[$o]}"
                                 if [ "$i" = "${inkeypins[0]}" ]; then
                                         echo "${inpad0[$o]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
