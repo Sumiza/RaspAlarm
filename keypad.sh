@@ -3,6 +3,11 @@
 
 inkeypins=(6 13 19 26)
 outkeypins=(12 16 20 21)
+inpad0=(1 2 3 A)
+inpad1=(4 5 6 B)
+inpad2=(7 8 9 C)
+inpad3=(* 0 \# D)
+
 
 for i in "${inkeypins[@]}"; do
           echo "Activating Pin $i"
@@ -31,6 +36,15 @@ do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
                                 echo "$o - $i"
+                                if [ "$i" = "${inkeypins[0]}" ]; then
+                                        echo "${inpad0[$o]}"
+                                elif  [ "$i" = "${inkeypins[1]}" ]; then
+                                       echo "${inpad1[$o]}" 
+                                elif  [ "$i" = "${inkeypins[2]}" ]; then
+                                        echo "${inpad2[$o]}"
+                                elif  [ "$i" = "${inkeypins[3]}" ]; then
+                                        echo "${inpad3[$o]}"
+                                fi
                         fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
