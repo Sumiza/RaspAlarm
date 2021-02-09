@@ -6,7 +6,7 @@ outkeypins=(12 16 20 21)
 inpad0=(1 2 3 A)
 inpad1=(4 5 6 B)
 inpad2=(7 8 9 C)
-inpad3=(* 0 \# D)
+inpad3=("*" "0" "#" "D")
 
 
 for i in "${inkeypins[@]}"; do
@@ -31,7 +31,6 @@ while :
 do
         c=0
         for o in "${outkeypins[@]}"; do
-                ((c=c+1))
                 echo "1" > /sys/class/gpio/gpio"$o"/value
                 for i in "${inkeypins[@]}"; do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
@@ -51,4 +50,5 @@ do
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
         done
+        ((c=c+1))
 done
