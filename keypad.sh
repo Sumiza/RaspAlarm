@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-keypins=(06 013 019 026 012 016 020 021)
+keypins=(6 13 19 26 12 16 20 21)
 
 for i in "${keypins[@]}"; do
           echo "Activating Pin $i"
