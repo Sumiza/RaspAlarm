@@ -28,9 +28,11 @@ do
         
                 echo "1" > /sys/class/gpio/gpio"$o"/value
                 for i in "${inkeypins[@]}"; do
-                        echo "$(cat /sys/class/gpio/gpio"$i"/value)"
+                        keydown=$(cat /sys/class/gpio/gpio"$i"/value)
+                        if [ "$keydown" = "1" ]; then
+                                echo "$o - $i"
+                        fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
         done
-        sleep 2
 done
