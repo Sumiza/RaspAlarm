@@ -1,9 +1,10 @@
 #!/bin/bash
 
 
-keypins=(6 13 19 26 12 16 20 21)
+inkeypins=(6 13 19 26)
+outkeypins=(12 16 20 21)
 
-for i in "${keypins[@]}"; do
+for i in "${inkeypins[@]}"; do
           echo "Activating Pin $i"
           raspi-gpio set "$i" ip pd
           echo "$i" > /sys/class/gpio/export
@@ -11,10 +12,25 @@ for i in "${keypins[@]}"; do
           echo "in" > /sys/class/gpio/gpio"$i"/direction
 done
 
+for i in "${outkeypins[@]}"; do
+          echo "Activating Pin $i"
+        #  raspi-gpio set "$i" op dl
+          echo "$i" > /sys/class/gpio/export
+          sleep 1.0
+          echo "out" > /sys/class/gpio/gpio"$i"/direction
+          echo "0" > /sys/class/gpio/gpio"$i"/value
+done
+
+
 while :
 do
-        for i in "${keypins[@]}"; do
-                echo "$(cat /sys/class/gpio/gpio"$i"/value)"
+        for o in "${outkeypins[@]}"; do
+        
+                echo "1" > /sys/class/gpio/gpio"$o"/value
+                for i in "${inkeypins[@]}"; do
+                        echo "$(cat /sys/class/gpio/gpio"$i"/value)"
+                done
+                echo "0" > /sys/class/gpio/gpio"$o"/value
         done
-        sleep 5
+        sleep 2
 done
