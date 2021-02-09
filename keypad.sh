@@ -40,7 +40,7 @@ do
                                         echo "${inpad0[$o]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
                                        echo "${inpad1[$o]}" 
-                                elif  [ "$i" = "${inkeypins[2]}" ]; then
+                                elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         echo "${inpad2[$o]}"
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         echo "${inpad3[$o]}"
