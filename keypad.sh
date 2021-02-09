@@ -29,21 +29,23 @@ done
 
 while :
 do
+        c=0
         for o in "${outkeypins[@]}"; do
-        
+                ((c=c+1))
                 echo "1" > /sys/class/gpio/gpio"$o"/value
                 for i in "${inkeypins[@]}"; do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
                                 echo "$o - $i"
+                                echo "${inpad0[$o]}"
                                 if [ "$i" = "${inkeypins[0]}" ]; then
-                                        echo "${inpad0[$o]}"
+                                        echo "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
-                                       echo "${inpad1[$o]}" 
+                                       echo "${inpad1[c]}" 
                                 elif  [ "$i" = "${inkeypins[2]}" ]; then
-                                        echo "${inpad2[$o]}"
+                                        echo "${inpad2[c]}"
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
-                                        echo "${inpad3[$o]}"
+                                        echo "${inpad3[c]}"
                                 fi
                         fi
                 done
