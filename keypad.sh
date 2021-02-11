@@ -34,16 +34,16 @@ function passcheck {
                 echo "$passhold"
                 for pass in "${passlist[@]}"; do
                         if [ "$pass" = "$passhold" ]; then
-                                echo "match"
-                                passhold=""
                                 if ls armed* > /dev/null 2>&1; then
                                         rm disarmed*
                                         rm armed*
-                                        touch disarmed_$1
+                                        touch disarmed_"$passhold"
+                                        echo "keypad disarmed"
                                 else
-                                        touch armed_$1
-                                        
+                                        touch armed_"$passhold"
+                                        echo "keypad armed"
                                 fi
+                                passhold=""
                         fi
                 done
         fi
@@ -66,10 +66,11 @@ do
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         passcheck "${inpad3[c]}"
                                 fi
-                                sleep 0.2
+                                sleep 0.1
                         fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
         done
+        sleep 0.1
 done
