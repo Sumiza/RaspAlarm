@@ -66,11 +66,10 @@ do
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         passcheck "${inpad3[c]}"
                                 fi
-                                sleep 0.1
+                                sleep 0.3
                         fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
         done
-        sleep 0.1
 done
