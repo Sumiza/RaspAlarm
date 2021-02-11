@@ -1,10 +1,10 @@
 #!/bin/bash
 
 source alarm.conf
-passlist=$KeyPad_Passwords
-passusers=$KeyPad_Users
-inkeypins=$KeyPad_InPins
-outkeypins=$KeyPad_OutPins
+passlist=($KeyPad_Passwords)
+passusers=($KeyPad_Users)
+inkeypins=($KeyPad_InPins)
+outkeypins=($KeyPad_OutPins)
 inpad0=("1" "2" "3" "A")
 inpad1=("4" "5" "6" "B")
 inpad2=("7" "8" "9" "C")
