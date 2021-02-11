@@ -142,5 +142,5 @@ do
            else
                system_disarmed
            fi
-       sleep 1
+       sleep 0.5
 done
