@@ -39,8 +39,8 @@ function passcheck {
                         if [ "$pass" = "$passhold" ]; then
                                 if ls armed* > /dev/null 2>&1; then
                                         rm disarmed*
-                                        rm armed*
                                         touch disarmed_"${passusers[$passname]}"
+                                        rm armed*
                                         echo "keypad disarmed by ${passusers[$passname]}"
                                 else
                                         touch armed_"${passusers[$passname]}"
