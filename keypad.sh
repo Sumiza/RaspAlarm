@@ -1,5 +1,7 @@
 #!/bin/bash
 
+passlist=(1234 5132 4456)
+passhold=""
 inkeypins=(6 13 19 26)
 outkeypins=(12 16 20 21)
 inpad0=("1" "2" "3" "A")
@@ -24,6 +26,22 @@ for i in "${outkeypins[@]}"; do
           echo "0" > /sys/class/gpio/gpio"$i"/value
 done
 
+function passcheck {
+        if [ "$1" = "#" ]; then
+                passhold=""
+        else
+                passhold="{$passhold} {$1}"
+                echo "$passhold"
+                for pass in "${passlist[@]}"; do
+                        if [ "$pass" = "$passhold" ]; then
+                                echo "match"
+                                echo "$passhold"
+                                passhold=""
+                        fi
+                done
+        fi
+}
+
 while :
 do
         c=0
@@ -35,15 +53,20 @@ do
                                # echo "$o - $i"
                                 if [ "$i" = "${inkeypins[0]}" ]; then
                                         echo "${inpad0[c]}"
+                                        passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
-                                       echo "${inpad1[c]}" 
+                                       echo "${inpad1[c]}"
+                                       passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[2]}" ]; then
                                         echo "${inpad2[c]}"
+                                        passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         echo "${inpad3[c]}"
+                                        passcheck "${inpad0[c]}"
                                 fi
                                 sleep 0.2
                         fi
+                        
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
