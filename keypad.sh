@@ -1,13 +1,14 @@
 #!/bin/bash
 
-passlist=(1234 5132 4456)
-passhold=""
-inkeypins=(6 13 19 26)
-outkeypins=(12 16 20 21)
+source alarm.conf
+passlist=$KeyPad_Passwords
+inkeypins=$KeyPad_InPins
+outkeypins=$KeyPad_OutPins
 inpad0=("1" "2" "3" "A")
 inpad1=("4" "5" "6" "B")
 inpad2=("7" "8" "9" "C")
 inpad3=("*" "0" "#" "D")
+passhold=""
 
 for i in "${inkeypins[@]}"; do
           echo "Activating Pin $i"
