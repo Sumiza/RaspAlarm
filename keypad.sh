@@ -21,7 +21,6 @@ done
 
 for i in "${outkeypins[@]}"; do
           echo "Activating Pin $i"
-        #  raspi-gpio set "$i" op dl
           echo "$i" > /sys/class/gpio/export
           sleep 1.0
           echo "out" > /sys/class/gpio/gpio"$i"/direction
