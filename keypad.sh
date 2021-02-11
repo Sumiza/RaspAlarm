@@ -30,13 +30,20 @@ function passcheck {
         if [ "$1" = "#" ]; then
                 passhold=""
         else
-                passhold="{$passhold} {$1}"
+                passhold="$passhold$1"
                 echo "$passhold"
                 for pass in "${passlist[@]}"; do
                         if [ "$pass" = "$passhold" ]; then
                                 echo "match"
-                                echo "$passhold"
                                 passhold=""
+                                if ls armed* > /dev/null 2>&1; then
+                                        rm disarmed*
+                                        rm armed*
+                                        touch disarmed_$1
+                                else
+                                        touch armed_$1
+                                        
+                                fi
                         fi
                 done
         fi
@@ -50,23 +57,17 @@ do
                 for i in "${inkeypins[@]}"; do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
-                               # echo "$o - $i"
                                 if [ "$i" = "${inkeypins[0]}" ]; then
-                                        echo "${inpad0[c]}"
                                         passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
-                                       echo "${inpad1[c]}"
-                                       passcheck "${inpad0[c]}"
+                                       passcheck "${inpad1[c]}"
                                 elif  [ "$i" = "${inkeypins[2]}" ]; then
-                                        echo "${inpad2[c]}"
-                                        passcheck "${inpad0[c]}"
+                                        passcheck "${inpad2[c]}"
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
-                                        echo "${inpad3[c]}"
-                                        passcheck "${inpad0[c]}"
+                                        passcheck "${inpad3[c]}"
                                 fi
                                 sleep 0.2
                         fi
-                        
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
