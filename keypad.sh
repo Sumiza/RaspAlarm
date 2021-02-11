@@ -29,6 +29,7 @@ done
 function passcheck {
         if [ "$1" = "#" ]; then
                 passhold=""
+                echo "clear"
         else
                 passhold="$passhold$1"
                 echo "$passhold"
