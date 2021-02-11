@@ -2,6 +2,7 @@
 
 source alarm.conf
 passlist=$KeyPad_Passwords
+passusers=$KeyPad_Users
 inkeypins=$KeyPad_InPins
 outkeypins=$KeyPad_OutPins
 inpad0=("1" "2" "3" "A")
@@ -34,19 +35,21 @@ function passcheck {
         else
                 passhold="$passhold$1"
                 echo "$passhold"
+                passname=0
                 for pass in "${passlist[@]}"; do
                         if [ "$pass" = "$passhold" ]; then
                                 if ls armed* > /dev/null 2>&1; then
                                         rm disarmed*
                                         rm armed*
-                                        touch disarmed_"$passhold"
-                                        echo "keypad disarmed"
+                                        touch disarmed_"${passusers[$passname]}"
+                                        echo "keypad disarmed by ${passusers[$passname]}"
                                 else
-                                        touch armed_"$passhold"
-                                        echo "keypad armed"
+                                        touch armed_"${passusers[$passname]}"
+                                        echo "keypad armed by ${passusers[$passname]}"
                                 fi
                                 passhold=""
                         fi
+                        ((passname=passname+1))
                 done
         fi
 }
