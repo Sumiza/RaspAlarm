@@ -5,6 +5,7 @@ passlist=($KeyPad_Passwords)
 passusers=($KeyPad_Users)
 inkeypins=($KeyPad_InPins)
 outkeypins=($KeyPad_OutPins)
+beeppin="$Beep_Noise_Pin"
 inpad0=("1" "2" "3" "A")
 inpad1=("4" "5" "6" "B")
 inpad2=("7" "8" "9" "C")
@@ -26,6 +27,13 @@ for i in "${outkeypins[@]}"; do
           echo "out" > /sys/class/gpio/gpio"$i"/direction
           echo "0" > /sys/class/gpio/gpio"$i"/value
 done
+
+echo "Activating Beep Pin"
+echo "$beeppin" > /sys/class/gpio/export
+sleep 1.0
+echo "out" > /sys/class/gpio/gpio"$beeppin"/direction
+echo "0" > /sys/class/gpio/gpio"$beeppin"/value
+
 
 function passcheck {
         if [ "$1" = "#" ]; then
@@ -70,10 +78,13 @@ do
                                 elif  [ "$i" = "${inkeypins[3]}" ]; then
                                         passcheck "${inpad3[c]}"
                                 fi
+                                echo "1" > /sys/class/gpio/gpio"$beeppin"/value
                                 sleep 0.3
+                                echo "0" > /sys/class/gpio/gpio"$beeppin"/value
                         fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
         done
 done
+
