@@ -13,8 +13,7 @@ PhoneNrsAlarm=($Phone_Numbers_Alarm)
 TwilioSID=$Twilio_SID
 TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
-Red_led=$Led_Red
-Green_led=$Led_Green
+Led_Red_Green=($LED_Red_Green)
 
 
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
@@ -143,18 +142,20 @@ function alarm_countdown {
 }
 
 function Red_on {
-        echo "0" > /sys/class/gpio/gpio"$Red_led"/value
+        echo "0" > /sys/class/gpio/gpio"${Led_Red_Green[0]}"/value
         red=1
 }
 function Red_off {
-        echo "1" > /sys/class/gpio/gpio"$Red_led"/value
+        echo "1" > /sys/class/gpio/gpio"${Led_Red_Green[0]}"/value
         red=0
 }
 function Green_on {
-        echo "0" > /sys/class/gpio/gpio"$Green_led"/value
+        echo "0" > /sys/class/gpio/gpio"${Led_Red_Green[1]}"/value
+        green=1
 }
 function Green_off {
-        echo "1" > /sys/class/gpio/gpio"$Green_led"/value
+        echo "1" > /sys/class/gpio/gpio"${Led_Red_Green[1]}"/value
+        green=0
 }
 
 arm=$ArmingTime
@@ -167,28 +168,28 @@ for i in "${SensorPins[@]}"; do
           echo "in" > /sys/class/gpio/gpio"$i"/direction
 done
 
-echo "Activating Pin Red LED"
-echo "$Red_led" > /sys/class/gpio/export
-sleep 1.0
-echo "out" > /sys/class/gpio/gpio"$Red_led"/direction
-echo "1" > /sys/class/gpio/gpio"$Red_led"/value
-        
-echo "Activating Pin Green LED"
-echo "$Green_led" > /sys/class/gpio/export
-sleep 1.0
-echo "out" > /sys/class/gpio/gpio"$Green_led"/direction
-echo "1" > /sys/class/gpio/gpio"$Green_led"/value
-
+for i in "${SensorPins[@]}"; do
+        echo "Activating LED Pin i"
+        echo "$i" > /sys/class/gpio/export
+        sleep 1.0
+        echo "out" > /sys/class/gpio/gpio"$i"/direction
+        echo "1" > /sys/class/gpio/gpio"$i"/value
+          
+done
 
 while :
 do
            if ls armed* > /dev/null 2>&1; then
-               Green_off
-               Red_on
-               system_armed
+                if [ "$red" != "1" ] || [ "$green" != "0" ]; then
+                        Green_off
+                        Red_on
+                fi
+                system_armed
            else
-                Red_off
-                Green_on
+                if [ "$red" != "0" ] || [ "$green" != "1" ]; then
+                        Red_off
+                        Green_on
+                fi
                 system_disarmed
            fi
        sleep 0.5
