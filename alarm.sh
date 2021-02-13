@@ -10,20 +10,23 @@ TimeBetweenMessage=$Time_Between_Message
 PhoneNrsArm=($Phone_Numbers_Arm)
 PhoneNrsDis=($Phone_Numbers_Disarm)
 PhoneNrsAlarm=($Phone_Numbers_Alarm)
-VoipMSDID=$VoipMS_DID
-VoipMSAPIUser=$VoipMS_API_User
-VoipMSAPIPass=$VoipMS_API_Password
+TwilioSID=$Twilio_SID
+TwilioAT=$Twilio_AH
+TwilioDiD=$Twilio_DID
 
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
          echo "CANT LOAD CONFIG FILE EXITING"
          exit 1
 fi
+#-----Done Loading-----------
 
 function send_sms {
-         curl -X GET "https://voip.ms/api/v1/rest.php?api_username=$VoipMSAPIUser&api_password=$VoipMSAPIPass&method=sendSMS&did=$VoipMSDID&dst=$1&message=$2"
+        curl -X POST https://api.twilio.com/2010-04-01/Accounts/"$TwilioSID"/Messages.json \
+        --data-urlencode "Body=$2" \
+        --data-urlencode "From=$TwilioDiD" \
+        --data-urlencode "To=$1" \
+        -u "$TwilioSID":"$TwilioAT"
 }
-
-#-----Done Loading-----------
 
 function system_armed_once {
        echo "ARMED NOW"
