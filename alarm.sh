@@ -10,6 +10,7 @@ TimeBetweenMessage=$Time_Between_Message
 PhoneNrsArm=($Phone_Numbers_Arm)
 PhoneNrsDis=($Phone_Numbers_Disarm)
 PhoneNrsAlarm=($Phone_Numbers_Alarm)
+PhoneNrsAlarmCall=($Phone_Numbers_Call)
 TwilioSID=$Twilio_SID
 TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
@@ -28,6 +29,15 @@ function send_sms {
         --data-urlencode "Body=$2" \
         --data-urlencode "From=$TwilioDiD" \
         --data-urlencode "To=$1" \
+        -u "$TwilioSID":"$TwilioAT"
+}
+
+function make_call {
+        curl -X POST \
+        --data-urlencode "Url=https://handler.twilio.com/twiml/EHbec3705f6cdc308a356137a7b613537e" \
+        --data-urlencode "To=$1" \
+        --data-urlencode "From=$TwilioDiD" \
+        "https://api.twilio.com/2010-04-01/Accounts/""$TwilioSID""/Calls" \
         -u "$TwilioSID":"$TwilioAT"
 }
 
@@ -64,6 +74,10 @@ function alarm_trigger {
                         for i in "${PhoneNrsAlarm[@]}"; do
                                 echo "SMS sent to ALARM $i"
                                 send_sms "$i" "Alarm_Triggered_On_Pin_$1"
+                        done
+                        for i in "${PhoneNrsAlarmCall[@]}"; do
+                                echo "Calling ALARM $i"
+                                make_call "$i"
                         done
                         sendcount=$TimeBetweenMessage
                   fi
