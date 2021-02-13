@@ -47,11 +47,11 @@ do
 			        if [ "$i" = "$contact" ]; then
                 			if ls armed* > /dev/null 2>&1; then
                 			        if [ "$message" = "status" ]; then
-                			                send_message "$contact" "Status_Armed"
+                			                send_message "$contact" "Status_Armed_$(find -- armed* | head -n1)"
                 			                echo "status armed"
                 				
                 				elif [ "$message" = "arm" ]; then
-                				        send_message "$contact" "Already_armed"
+                				        send_message "$contact" "Already_armed_by_$(find -- armed* | head -n1)"
                 				        
                 				elif [ "$message" = "disarm" ]; then
                 				        rm disarmed*
@@ -60,14 +60,14 @@ do
                 				fi
                 			else
                 			        if [ "$message" = "status" ]; then
-                			                send_message "$contact" "Status_Disarmed"
+                			                send_message "$contact" "Status_Disarmed_by_$(find -- disarmed* | head -n1)"
                 			                echo "status disarmed"
                 				
                 				elif [ "$message" = "arm" ]; then
                 			                touch armed_"${controlusers[c]}"
                 			               
                 				elif [ "$message" = "disarm" ]; then
-                				        send_message "$contact" "Already_Disarmed"
+                				        send_message "$contact" "Already_Disarmed_by_$(find -- disarmed* | head -n1)"
                 				fi
                 			fi
                 		fi
