@@ -5,7 +5,7 @@
 source alarm.conf
 ArmingTime=$Arming_Time
 DisarmTime=$Disarm_Time
-usedpins=($Used_Pins)
+sensorpins=($Sensor_Pins)
 TimeBetweenMessage=$Time_Between_Message
 PhoneNrsArm=($Phone_Numbers_Arm)
 PhoneNrsDis=($Phone_Numbers_Disarm)
@@ -87,7 +87,7 @@ function system_armed {
 
           if [ "$arm" -eq -1 ]; then
                   echo "ARMED"
-                  for i in "${usedpins[@]}"; do
+                  for i in "${sensorpins[@]}"; do
                           trigger=$(cat /sys/class/gpio/gpio"$i"/value)
                           if [ "$trigger" = "1" ]; then
                                  alarm_countdown "$i"
@@ -130,7 +130,7 @@ function alarm_countdown {
 
 arm=$ArmingTime
 dis=$DisarmTime
-for i in "${usedpins[@]}"; do
+for i in "${sensorpins[@]}"; do
           echo "Activating Pin $i"
           raspi-gpio set "$i" ip pu
           echo "$i" > /sys/class/gpio/export
