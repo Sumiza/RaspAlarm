@@ -182,7 +182,7 @@ echo "1" > /sys/class/gpio/gpio"$Green_led"/value
 while :
 do
            if ls armed* > /dev/null 2>&1; then
-               Green off
+               Green_off
                Red_on
                system_armed
            else
