@@ -168,7 +168,7 @@ for i in "${SensorPins[@]}"; do
           echo "in" > /sys/class/gpio/gpio"$i"/direction
 done
 
-for i in "${SensorPins[@]}"; do
+for i in "${Led_Red_Green[@]}"; do
         echo "Activating LED Pin i"
         echo "$i" > /sys/class/gpio/export
         sleep 1.0
