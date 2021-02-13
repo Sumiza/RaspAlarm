@@ -89,7 +89,7 @@ function system_armed {
                   echo "ARMED"
                   for i in "${usedpins[@]}"; do
                           trigger=$(cat /sys/class/gpio/gpio"$i"/value)
-                          if [ "$trigger" = "0" ]; then
+                          if [ "$trigger" = "1" ]; then
                                  alarm_countdown "$i"
                                  break 1
                           fi
@@ -132,7 +132,7 @@ arm=$ArmingTime
 dis=$DisarmTime
 for i in "${usedpins[@]}"; do
           echo "Activating Pin $i"
-          raspi-gpio set "$i" ip pd
+          raspi-gpio set "$i" ip pu
           echo "$i" > /sys/class/gpio/export
           sleep 1.0
           echo "in" > /sys/class/gpio/gpio"$i"/direction
