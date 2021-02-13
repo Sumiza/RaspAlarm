@@ -132,7 +132,7 @@ arm=$ArmingTime
 dis=$DisarmTime
 for i in "${usedpins[@]}"; do
           echo "Activating Pin $i"
-          raspi-gpio set "$i" ip pu
+          raspi-gpio set "$i" ip pd
           echo "$i" > /sys/class/gpio/export
           sleep 1.0
           echo "in" > /sys/class/gpio/gpio"$i"/direction
