@@ -53,15 +53,11 @@ function system_disarmed_once {
 
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
+          Red_on
           sendcount=$TimeBetweenMessage
           while ls armed* > /dev/null 2>&1; do
                   echo "$sendcount"
                   #ring siren
-                if [ "$red" = "1" ]; then
-                        Red_off
-                else
-                        Red_on
-                fi
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
                         echo "sending message and calling"
                         for i in "${PhoneNrsAlarm[@]}"; do
@@ -127,6 +123,11 @@ function alarm_countdown {
           echo "alarm countdown..."
           while [ "$dis" -ge 0 ]; do
                   if ls armed* > /dev/null 2>&1; then
+                           if [ "$red" = "1" ]; then
+                                    Red_off
+                           else
+                                    Red_on
+                           fi
                           echo "$dis" till Alarm
                           ((dis=dis-1))
                           if [ "$dis" -eq 0 ]; then
