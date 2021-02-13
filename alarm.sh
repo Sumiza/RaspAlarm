@@ -54,11 +54,11 @@ function system_disarmed_once {
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
           Red_on
-          Beep_on
           sendcount=$TimeBetweenMessage
           while ls armed* > /dev/null 2>&1; do
                   echo "$sendcount"
                   #ring siren
+                  Beep_on
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
                         echo "sending message and calling"
                         for i in "${PhoneNrsAlarm[@]}"; do
@@ -183,7 +183,7 @@ for i in "${SensorPins[@]}"; do
 done
 
 for i in "${Led_Red_Green[@]}"; do
-        echo "Activating LED Pin i"
+        echo "Activating LED Pin $i"
         echo "$i" > /sys/class/gpio/export
         sleep 1.0
         echo "out" > /sys/class/gpio/gpio"$i"/direction
