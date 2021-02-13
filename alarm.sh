@@ -33,8 +33,8 @@ function send_sms {
 function system_armed_once {
        echo "ARMED NOW"
        for i in "${PhoneNrsArm[@]}"; do
-                 echo "SMS Sent to armed $i"
-                 send_sms "$i" "Alarm_Armed"
+                 echo "SMS Sent to armed $i $(find -- armed* | head -n1)"
+                 send_sms "$i" "Alarm_Armed_by_$(find -- armed* | head -n1)"
        done
        sleep 1.0
        # do stuff here when alarm activates, runs once.
@@ -43,8 +43,8 @@ function system_armed_once {
 function system_disarmed_once {
        echo "Disarmed now"
        for i in "${PhoneNrsDis[@]}"; do
-                 echo "SMS sent to disarmed $i"
-                 send_sms "$i" "Alarm_Disarmed"
+                 echo "SMS sent to disarmed $i $(find -- disarmed* | head -n1)"
+                 send_sms "$i" "Alarm_Disarmed_by_$(find -- disarmed* | head -n1)"
        done
        sleep 1.0
 # do stuff here when alarm deactivates, runs once.
