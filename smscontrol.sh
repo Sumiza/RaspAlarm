@@ -47,7 +47,7 @@ do
 			        if [ "$i" = "$contact" ]; then
                 			if ls armed* > /dev/null 2>&1; then
                 			        if [ "$message" = "status" ]; then
-                			                send_message "$contact" "Status_Armed_$(find -- armed* | head -n1)"
+                			                send_message "$contact" "Status_Armed_by_$(find -- armed* | head -n1)"
                 			                echo "status armed"
                 				
                 				elif [ "$message" = "arm" ]; then
