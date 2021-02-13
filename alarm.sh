@@ -152,7 +152,7 @@ function Red_off {
 function Green_on {
         echo "0" > /sys/class/gpio/gpio"$Green_led"/value
 }
-function Green_on {
+function Green_off {
         echo "1" > /sys/class/gpio/gpio"$Green_led"/value
 }
 
