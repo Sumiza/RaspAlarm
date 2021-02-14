@@ -16,7 +16,7 @@ TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
 Twilio_xml=$Twilio_XML
 Led_Red_Green=($LED_Red_Green)
-Beeppin="$Beep_Noise_Pin"
+Beeppin=$Beep_Noise_Pin
 Sirenpin=$Siren_Pin
 Logfile=$Log_File
 
