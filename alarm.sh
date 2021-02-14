@@ -14,6 +14,7 @@ PhoneNrsAlarmCall=($Phone_Numbers_Call)
 TwilioSID=$Twilio_SID
 TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
+Twilio_xml=$Twilio_XML
 Led_Red_Green=($LED_Red_Green)
 beeppin="$Beep_Noise_Pin"
 
@@ -34,7 +35,7 @@ function send_sms {
 
 function make_call {
         curl -X POST \
-        --data-urlencode "Url=https://handler.twilio.com/twiml/EHbec3705f6cdc308a356137a7b613537e" \
+        --data-urlencode "Url=""$Twilio_xml""" \
         --data-urlencode "To=$1" \
         --data-urlencode "From=$TwilioDiD" \
         "https://api.twilio.com/2010-04-01/Accounts/""$TwilioSID""/Calls" \
