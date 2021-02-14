@@ -16,7 +16,8 @@ TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
 Twilio_xml=$Twilio_XML
 Led_Red_Green=($LED_Red_Green)
-beeppin="$Beep_Noise_Pin"
+Beeppin="$Beep_Noise_Pin"
+Sirenpin=$Siren_Pin
 
 
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
@@ -65,11 +66,12 @@ function system_disarmed_once {
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
           Red_on
+          Beep_on
+          Siren_on
           sendcount=$TimeBetweenMessage
           while ls armed* > /dev/null 2>&1; do
                   echo "$sendcount"
                   #ring siren
-                  Beep_on
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
                         echo "sending message and calling"
                         for i in "${PhoneNrsAlarm[@]}"; do
@@ -179,12 +181,20 @@ function Green_off {
         green=0
 }
 function Beep_on {
-        echo "1" > /sys/class/gpio/gpio"$beeppin"/value
+        echo "1" > /sys/class/gpio/gpio"$Beeppin"/value
         beep=1
 }
 function Beep_off {
-        echo "0" > /sys/class/gpio/gpio"$beeppin"/value
+        echo "0" > /sys/class/gpio/gpio"$Beeppin"/value
         beep=0
+}
+function Siren_on {
+        echo "1" > /sys/class/gpio/gpio"$Sirenpin"/value
+        siren=1
+}
+function Siren_off {
+        echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
+        siren=0
 }
 
 arm=$ArmingTime
@@ -205,10 +215,17 @@ for i in "${Led_Red_Green[@]}"; do
         echo "1" > /sys/class/gpio/gpio"$i"/value
 done
 echo "Activating Beep Pin"
-echo "$beeppin" > /sys/class/gpio/export
+echo "$Beeppin" > /sys/class/gpio/export
 sleep 1.0
-echo "out" > /sys/class/gpio/gpio"$beeppin"/direction
-echo "0" > /sys/class/gpio/gpio"$beeppin"/value
+echo "out" > /sys/class/gpio/gpio"$Beeppin"/direction
+echo "0" > /sys/class/gpio/gpio"$Beeppin"/value
+
+echo "Activating Siren Pin"
+echo "$Sirenpin" > /sys/class/gpio/export
+sleep 1.0
+echo "out" > /sys/class/gpio/gpio"$Sirenpin"/direction
+echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
+
 
 while :
 do
@@ -225,8 +242,9 @@ do
                 fi
                 system_disarmed
            fi
-           if [ "$beep" = "1" ]; then
+           if [ "$beep" = "1" ] || [ "$siren" = "1" ]; then
                 Beep_off
+                Siren_off
                 fi
        sleep 0.5
 done
