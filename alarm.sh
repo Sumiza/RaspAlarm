@@ -18,6 +18,7 @@ Twilio_xml=$Twilio_XML
 Led_Red_Green=($LED_Red_Green)
 Beeppin="$Beep_Noise_Pin"
 Sirenpin=$Siren_Pin
+Logfile=$Log_File
 
 
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
@@ -45,6 +46,7 @@ function make_call {
 
 function system_armed_once {
        echo "ARMED NOW"
+       echo date '+%d/%m/%Y_%H:%M:%S' "  $(find -- armed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsArm[@]}"; do
                  echo "SMS Sent to armed $i $(find -- armed* | head -n1)"
                  send_sms "$i" "Alarm_Armed_by_$(find -- armed* | head -n1)"
@@ -55,8 +57,10 @@ function system_armed_once {
 
 function system_disarmed_once {
        echo "Disarmed now"
+       echo date '+%d/%m/%Y_%H:%M:%S' "  $(find -- disarmed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsDis[@]}"; do
                  echo "SMS sent to disarmed $i $(find -- disarmed* | head -n1)"
+                 
                  send_sms "$i" "Alarm_Disarmed_by_$(find -- disarmed* | head -n1)"
        done
        sleep 1.0
@@ -65,6 +69,7 @@ function system_disarmed_once {
 
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
+          echo date '+%d/%m/%Y_%H:%M:%S' " ALARM TRIGGERED" >> "$Logfile"
           Red_on
           Beep_on
           Siren_on
