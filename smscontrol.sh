@@ -78,5 +78,5 @@ do
                         curl -X DELETE https://api.twilio.com"$id" \
                         -u "$TwilioSID":"$TwilioAT"
                 fi
-        sleep 15
+        sleep 10
 done
