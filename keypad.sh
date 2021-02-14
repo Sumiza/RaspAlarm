@@ -11,6 +11,7 @@ inpad1=("4" "5" "6" "B")
 inpad2=("7" "8" "9" "C")
 inpad3=("*" "0" "#" "D")
 passhold=""
+epoch=0
 
 for i in "${inkeypins[@]}"; do
           echo "Activating Pin $i"
@@ -69,6 +70,10 @@ do
                 for i in "${inkeypins[@]}"; do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
+                                ((epoch=epoch+10))
+                                if [ "$EPOCHSECONDS" -gt "$epoch" ]; then
+                                        passhold=""
+                                fi
                                 if [ "$i" = "${inkeypins[0]}" ]; then
                                         passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
@@ -79,6 +84,7 @@ do
                                         passcheck "${inpad3[c]}"
                                 fi
                                 echo "1" > /sys/class/gpio/gpio"$beeppin"/value
+                                epoch=$EPOCHSECONDS
                                 sleep 0.3
                                 echo "0" > /sys/class/gpio/gpio"$beeppin"/value
                         fi
