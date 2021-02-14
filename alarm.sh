@@ -19,6 +19,7 @@ Led_Red_Green=($LED_Red_Green)
 Beeppin=$Beep_Noise_Pin
 Sirenpin=$Siren_Pin
 Logfile=$Log_File
+Loglength=$Log_Length_Lines
 
 
 if [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ] || [ "$ArmingTime" = "" ] || [ "$DisarmTime" = "" ]; then
@@ -51,7 +52,9 @@ function system_armed_once {
                  echo "SMS Sent to armed $i $(find -- armed* | head -n1)"
                  send_sms "$i" "Alarm_Armed_by_$(find -- armed* | head -n1)"
        done
-       sleep 1.0
+        while [ "$(wc -l < "$Logfile" )" -gt "$Loglength" ]; do
+                sed -i 1d "$Logfile"
+        done
        # do stuff here when alarm activates, runs once.
 }
 
@@ -63,8 +66,7 @@ function system_disarmed_once {
                  
                  send_sms "$i" "Alarm_Disarmed_by_$(find -- disarmed* | head -n1)"
        done
-       sleep 1.0
-# do stuff here when alarm deactivates, runs once.
+        # do stuff here when alarm deactivates, runs once.
 }
 
 function alarm_trigger {
