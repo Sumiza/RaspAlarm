@@ -85,7 +85,7 @@ do
                                 fi
                                 echo "1" > /sys/class/gpio/gpio"$beeppin"/value
                                 epoch=$EPOCHSECONDS
-                                sleep 0.3
+                                sleep 0.2
                                 echo "0" > /sys/class/gpio/gpio"$beeppin"/value
                         fi
                 done
