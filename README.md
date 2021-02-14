@@ -5,7 +5,11 @@ WIP
 
 A security system made out of a raspberry pi, written fully in bash.
 
+-----------------------------------------------------------------------
+
+
 FAQ:
+
 Why not use python, existing libraries would make this faster and easier?
 
 Wanted to write something from scratch not using premade libraries or having any dependencies (yes using raspi-gpio to set pull up resistor, as only other way would be via physical resistors”
