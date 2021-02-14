@@ -46,7 +46,7 @@ function make_call {
 
 function system_armed_once {
        echo "ARMED NOW"
-       echo date +%d/%m/%Y_%H:%M:%S "  $(find -- armed* | head -n1)" >> "$Logfile"
+       echo "$(date)" "$(find -- armed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsArm[@]}"; do
                  echo "SMS Sent to armed $i $(find -- armed* | head -n1)"
                  send_sms "$i" "Alarm_Armed_by_$(find -- armed* | head -n1)"
@@ -57,7 +57,7 @@ function system_armed_once {
 
 function system_disarmed_once {
        echo "Disarmed now"
-       echo date +%d/%m/%Y_%H:%M:%S "  $(find -- disarmed* | head -n1)" >> "$Logfile"
+       echo "$(date)" "$(find -- disarmed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsDis[@]}"; do
                  echo "SMS sent to disarmed $i $(find -- disarmed* | head -n1)"
                  
@@ -69,7 +69,7 @@ function system_disarmed_once {
 
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
-          echo date +%d/%m/%Y_%H:%M:%S " ALARM TRIGGERED" >> "$Logfile"
+          echo "$(date)" "ALARM TRIGGERED" >> "$Logfile"
           Red_on
           Beep_on
           Siren_on
