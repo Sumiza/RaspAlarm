@@ -23,22 +23,22 @@ function send_message {
 while :
 do
         apianswer=$(get_messages)
-        contact=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d'"' -f 16)
-        message=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d'"' -f 4)
-        id=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d'"' -f 28)
-        direction=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d'"' -f 12)
+        message=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 2 |  cut -d'"' -f 2)
+        direction=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 4 | cut -d'"' -f 2)
+        contact=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 5 | cut -d'"' -f 2)
+        id=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 11 | cut -d'"' -f 2)
         message=${message,,}
-        
+
         echo "------------"
         echo "$apianswer"
         echo "------------"
-        echo "$contact"
-        echo "------------"
         echo "$message"
         echo "------------"
-        echo "$id"
+	echo "$direction"
         echo "------------"
-        echo "$direction"
+        echo "$contact"
+        echo "------------"
+        echo "$id" 
         echo "------------"
         
 		if [ "$contact" != "" ] && [ "$message" != "" ] && [ "$id" != "" ] &&  [ "$direction" = "inbound" ]; then
