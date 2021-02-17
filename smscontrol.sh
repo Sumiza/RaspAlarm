@@ -49,35 +49,33 @@ do
 			c=0
 			for i in "${controlnumbers[@]}"; do
 			        if [ "$i" = "$contact" ]; then
-			                for j in "${smspass[@]}"; do
-			                        if [ "$j" = "$pass" ]; then
-                                			if ls armed* > /dev/null 2>&1; then
-                                			        if [ "$message" = "status" ]; then
-                                			                send_message "$contact" "Status_Armed_by_$(find -- armed* | head -n1)"
-                                			                echo "status armed"
-                                				
-                                				elif [ "$message" = "arm" ]; then
-                                				        send_message "$contact" "Already_armed_by_$(find -- armed* | head -n1)"
-                                				        
-                                				elif [ "$message" = "disarm" ]; then
-                                				        rm disarmed*
-                                				        touch disarmed_SMS_"${controlusers[c]}"
-                                				        rm armed*
-                                				fi
-                                			else
-                                			        if [ "$message" = "status" ]; then
-                                			                send_message "$contact" "Status_Disarmed_by_$(find -- disarmed* | head -n1)"
-                                			                echo "status disarmed"
-                                				
-                                				elif [ "$message" = "arm" ]; then
-                                			                touch armed_SMS_"${controlusers[c]}"
-                                			               
-                                				elif [ "$message" = "disarm" ]; then
-                                				        send_message "$contact" "Already_Disarmed_by_$(find -- disarmed* | head -n1)"
-                                				fi
-                                			fi
-                                		fi
-                        		done
+		                        if [ "${smspass[c]}" = "$pass" ]; then
+                        			if ls armed* > /dev/null 2>&1; then
+                        			        if [ "$message" = "status" ]; then
+                        			                send_message "$contact" "Status_Armed_by_$(find -- armed* | head -n1)"
+                        			                echo "status armed"
+                        				
+                        				elif [ "$message" = "arm" ]; then
+                        				        send_message "$contact" "Already_armed_by_$(find -- armed* | head -n1)"
+                        				        
+                        				elif [ "$message" = "disarm" ]; then
+                        				        rm disarmed*
+                        				        touch disarmed_SMS_"${controlusers[c]}"
+                        				        rm armed*
+                        				fi
+                        			else
+                        			        if [ "$message" = "status" ]; then
+                        			                send_message "$contact" "Status_Disarmed_by_$(find -- disarmed* | head -n1)"
+                        			                echo "status disarmed"
+                        				
+                        				elif [ "$message" = "arm" ]; then
+                        			                touch armed_SMS_"${controlusers[c]}"
+                        			               
+                        				elif [ "$message" = "disarm" ]; then
+                        				        send_message "$contact" "Already_Disarmed_by_$(find -- disarmed* | head -n1)"
+                        				fi
+                        			fi
+                        		fi
                 		fi
                 		((c=c+1))
         		done
