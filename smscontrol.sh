@@ -6,6 +6,7 @@ TwilioAT=$Twilio_AH
 TwilioDiD=$Twilio_DID
 controlnumbers=($Phone_Numbers_Control)
 controlusers=($Phone_Numbers_Users)
+smspass=($Phone_Numbers_Passwords)
 
 function get_messages {
 	curl -X GET https://api.twilio.com/2010-04-01/Accounts/"$TwilioSID"/Messages.json?PageSize=1 \
@@ -23,7 +24,8 @@ function send_message {
 while :
 do
         apianswer=$(get_messages)
-        message=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 2 |  cut -d'"' -f 2)
+        message=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 2 |  cut -d'"' -f 2 | cut -d ' ' -f 1)
+        pass=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 2 |  cut -d'"' -f 2 | cut -d ' ' -f 2)
         direction=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 4 | cut -d'"' -f 2)
         contact=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 5 | cut -d'"' -f 2)
         id=$(echo "$apianswer" | cut -d'{' -f 3 | cut -d':' -f 11 | cut -d'"' -f 2)
@@ -40,36 +42,42 @@ do
         echo "------------"
         echo "$id" 
         echo "------------"
+        echo "$pass"
+	echo "------------"
         
 		if [ "$contact" != "" ] && [ "$message" != "" ] && [ "$id" != "" ] &&  [ "$direction" = "inbound" ]; then
 			c=0
 			for i in "${controlnumbers[@]}"; do
 			        if [ "$i" = "$contact" ]; then
-                			if ls armed* > /dev/null 2>&1; then
-                			        if [ "$message" = "status" ]; then
-                			                send_message "$contact" "Status_Armed_by_$(find -- armed* | head -n1)"
-                			                echo "status armed"
-                				
-                				elif [ "$message" = "arm" ]; then
-                				        send_message "$contact" "Already_armed_by_$(find -- armed* | head -n1)"
-                				        
-                				elif [ "$message" = "disarm" ]; then
-                				        rm disarmed*
-                				        touch disarmed_SMS_"${controlusers[c]}"
-                				        rm armed*
-                				fi
-                			else
-                			        if [ "$message" = "status" ]; then
-                			                send_message "$contact" "Status_Disarmed_by_$(find -- disarmed* | head -n1)"
-                			                echo "status disarmed"
-                				
-                				elif [ "$message" = "arm" ]; then
-                			                touch armed_SMS_"${controlusers[c]}"
-                			               
-                				elif [ "$message" = "disarm" ]; then
-                				        send_message "$contact" "Already_Disarmed_by_$(find -- disarmed* | head -n1)"
-                				fi
-                			fi
+			                for j in "${smspass[@]}"; do
+			                        if [ "$j" = "$pass" ]; then
+                                			if ls armed* > /dev/null 2>&1; then
+                                			        if [ "$message" = "status" ]; then
+                                			                send_message "$contact" "Status_Armed_by_$(find -- armed* | head -n1)"
+                                			                echo "status armed"
+                                				
+                                				elif [ "$message" = "arm" ]; then
+                                				        send_message "$contact" "Already_armed_by_$(find -- armed* | head -n1)"
+                                				        
+                                				elif [ "$message" = "disarm" ]; then
+                                				        rm disarmed*
+                                				        touch disarmed_SMS_"${controlusers[c]}"
+                                				        rm armed*
+                                				fi
+                                			else
+                                			        if [ "$message" = "status" ]; then
+                                			                send_message "$contact" "Status_Disarmed_by_$(find -- disarmed* | head -n1)"
+                                			                echo "status disarmed"
+                                				
+                                				elif [ "$message" = "arm" ]; then
+                                			                touch armed_SMS_"${controlusers[c]}"
+                                			               
+                                				elif [ "$message" = "disarm" ]; then
+                                				        send_message "$contact" "Already_Disarmed_by_$(find -- disarmed* | head -n1)"
+                                				fi
+                                			fi
+                                		fi
+                        		done
                 		fi
                 		((c=c+1))
         		done
