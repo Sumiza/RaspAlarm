@@ -55,7 +55,7 @@ do
 		                        if [ "${smspass[c]}" = "$pass" ]; then
                         			if ls Armed* > /dev/null 2>&1; then
                         			        if [ "$message" = "status" ]; then
-                        			                send_message "$contact" "Disarmed Status: $(find -- Armed* | head -n1)"
+                        			                send_message "$contact" "Armed Status: $(find -- Armed* | head -n1)"
                         			                echo "status Armed"
                         				
                         				elif [ "$message" = "arm" ]; then
@@ -68,7 +68,7 @@ do
                         				fi
                         			else
                         			        if [ "$message" = "status" ]; then
-                        			                send_message "$contact" "Armed Status: $(find -- Disarmed* | head -n1)"
+                        			                send_message "$contact" "Disarmed Status: $(find -- Disarmed* | head -n1)"
                         			                echo "status Disarmed"
                         				
                         				elif [ "$message" = "arm" ]; then
