@@ -9,7 +9,9 @@ controlusers=($Phone_Numbers_Users)
 smspass=($Phone_Numbers_Passwords)
 
 function get_messages {
-	curl -X GET https://api.twilio.com/2010-04-01/Accounts/"$TwilioSID"/Messages.json?PageSize=1 \
+	--data-urlencode "from=$TwilioDiD" \
+	--data-urlencode "PageSize=1" \
+	curl -X GET https://api.twilio.com/2010-04-01/Accounts/"$TwilioSID"/Messages.json \
         -u "$TwilioSID":"$TwilioAT"
 }
 
