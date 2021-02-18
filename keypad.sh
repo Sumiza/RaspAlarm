@@ -52,11 +52,11 @@ function passcheck {
                         if [ "$pass" = "$passhold" ]; then
                                 if ls armed* > /dev/null 2>&1; then
                                         rm disarmed*
-                                        touch disarmed by SMS by "${passusers[$passname]}" at "$(date)"
+                                        touch "disarmed by SMS by ""${passusers[$passname]}"" at ""$(date)"""
                                         rm armed*
                                         echo "keypad disarmed by ${passusers[$passname]}"
                                 else
-                                        touch armed by SMS by "${passusers[$passname]}" at "$(date)"
+                                        touch "armed by SMS by ""${passusers[$passname]}"" at ""$(date)"""
                                         echo "keypad armed by ${passusers[$passname]}"
                                 fi
                                 passhold=""
