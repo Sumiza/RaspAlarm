@@ -47,10 +47,10 @@ function make_call {
 
 function system_armed_once {
        echo "ARMED NOW"
-       echo "$(date)" "$(find -- armed* | head -n1)" >> "$Logfile"
+       echo "$(date)" "$(find -- Armed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsArm[@]}"; do
-                 echo "SMS Sent to armed $i $(find -- armed* | head -n1)"
-                 send_sms "$i" "Alarm_Armed_by_$(find -- armed* | head -n1)"
+                 echo "SMS Sent to Armed $i $(find -- Armed* | head -n1)"
+                 send_sms "$i" "Alarm Armed: $(find -- Armed* | head -n1)"
        done
         while [ "$(wc -l < "$Logfile" )" -gt "$Loglength" ]; do
                 sed -i 1d "$Logfile"
@@ -60,30 +60,28 @@ function system_armed_once {
 
 function system_disarmed_once {
        echo "Disarmed now"
-       echo "$(date)" "$(find -- disarmed* | head -n1)" >> "$Logfile"
+       echo "$(date)" "$(find -- Disarmed* | head -n1)" >> "$Logfile"
        for i in "${PhoneNrsDis[@]}"; do
-                 echo "SMS sent to disarmed $i $(find -- disarmed* | head -n1)"
-                 
-                 send_sms "$i" "Alarm_Disarmed_by_$(find -- disarmed* | head -n1)"
+                 echo "SMS sent to Disarmed $i $(find -- Disarmed* | head -n1)"
+                 send_sms "$i" "Alarm Disarmed: $(find -- Disarmed* | head -n1)"
        done
         # do stuff here when alarm deactivates, runs once.
 }
 
 function alarm_trigger {
           echo "TRIGGER ALARM !!!!"
-          echo "$(date)" "ALARM TRIGGERED" >> "$Logfile"
+          echo "$(date)" "ALARM TRIGGERED on pin $1" >> "$Logfile"
           Red_on
           Beep_on
           Siren_on
           sendcount=$TimeBetweenMessage
-          while ls armed* > /dev/null 2>&1; do
+          while ls Armed* > /dev/null 2>&1; do
                   echo "$sendcount"
-                  #ring siren
                   if [ "$sendcount" -eq "$TimeBetweenMessage" ] || [ "$sendcount" -eq 0 ]; then
                         echo "sending message and calling"
                         for i in "${PhoneNrsAlarm[@]}"; do
                                 echo "SMS sent to ALARM $i"
-                                send_sms "$i" "Alarm_Triggered_On_Pin_$1"
+                                send_sms "$i" "Alarm Triggered on Pin $1"
                         done
                         for i in "${PhoneNrsAlarmCall[@]}"; do
                                 echo "Calling ALARM $i"
@@ -100,7 +98,7 @@ function alarm_trigger {
 
 function system_armed {
           while [ "$arm" -ge 0 ]; do
-                  if ls armed* > /dev/null 2>&1; then
+                  if ls Armed* > /dev/null 2>&1; then
                        echo "$arm"
                        if [ "$red" = "1" ]; then
                                 Red_off
@@ -137,8 +135,8 @@ function system_disarmed {
 
        if [ "$arm" -eq -1 ]; then
           system_disarmed_once
-          if ls armed* > /dev/null 2>&1; then
-                  rm armed*
+          if ls Armed* > /dev/null 2>&1; then
+                  rm Armed*
           fi
           arm=$ArmingTime
           dis=$DisarmTime
@@ -149,7 +147,7 @@ function system_disarmed {
 function alarm_countdown {
           echo "alarm countdown..."
           while [ "$dis" -ge 0 ]; do
-                  if ls armed* > /dev/null 2>&1; then
+                  if ls Armed* > /dev/null 2>&1; then
                            if [ "$red" = "1" ]; then
                                     Red_off
                                     Beep_off
@@ -236,7 +234,7 @@ echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
 
 while :
 do
-           if ls armed* > /dev/null 2>&1; then
+           if ls Armed* > /dev/null 2>&1; then
                 if [ "$red" != "1" ] || [ "$green" != "0" ]; then
                         Green_off
                         Red_on
