@@ -84,7 +84,7 @@ do
                         				        send_message "$contact" "Already Disarmed: $(find -- Disarmed* | head -n1)"
                         				fi
                         			fi
-                                             clear_message "$id"
+						clear_message "$id"
                         		fi
                 		fi
                 		((c=c+1))
