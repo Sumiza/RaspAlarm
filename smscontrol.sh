@@ -24,6 +24,12 @@ function send_message {
         -u "$TwilioSID":"$TwilioAT"
 }
 
+function clear_message {
+        curl -X POST https://api.twilio.com"$1" \
+        -d "Body=" \
+        -u "$TwilioSID":"$TwilioAT"
+}
+
 while :
 do
         apianswer=$(get_messages)
@@ -78,14 +84,11 @@ do
                         				        send_message "$contact" "Already Disarmed: $(find -- Disarmed* | head -n1)"
                         				fi
                         			fi
+						clear_message "$id"
                         		fi
                 		fi
                 		((c=c+1))
         		done
 		fi
-        	if [ "$id" != "" ]; then
-                        curl -X DELETE https://api.twilio.com"$id" \
-                        -u "$TwilioSID":"$TwilioAT"
-                fi
         sleep 10
 done
