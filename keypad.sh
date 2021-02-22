@@ -29,13 +29,6 @@ for i in "${outkeypins[@]}"; do
           echo "0" > /sys/class/gpio/gpio"$i"/value
 done
 
-echo "Activating Beep Pin"
-echo "$beeppin" > /sys/class/gpio/export
-sleep 1.0
-echo "out" > /sys/class/gpio/gpio"$beeppin"/direction
-echo "0" > /sys/class/gpio/gpio"$beeppin"/value
-
-
 function passcheck {
         if [ "$1" = "#" ]; then
                 passhold=""
