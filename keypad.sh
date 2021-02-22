@@ -45,11 +45,11 @@ function passcheck {
                         if [ "$pass" = "$passhold" ]; then
                                 if ls Armed* > /dev/null 2>&1; then
                                         rm Disarmed*
-                                        touch "Disarmed by Keypad by ""${passusers[$passname]}"" at ""$(date)"""
+                                        touch "Disarmed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
                                         rm Armed*
                                         echo "keypad Disarmed by ${passusers[$passname]}"
                                 else
-                                        touch "Armed by Keypad by ""${passusers[$passname]}"" at ""$(date)"""
+                                        touch "Armed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
                                         echo "keypad Armed by ${passusers[$passname]}"
                                 fi
                                 passhold=""
