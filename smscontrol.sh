@@ -69,7 +69,7 @@ do
                         				        
                         				elif [ "$message" = "disarm" ]; then
                         				        rm Disarmed*
-                        				        touch "Disarmed by SMS by ""${controlusers[c]}"" at ""$(date)"""
+                        				        touch "Disarmed via SMS by ""${controlusers[c]}"" on ""$(date)"""
                         				        rm Armed*
                         				fi
                         			else
@@ -78,7 +78,7 @@ do
                         			                echo "status Disarmed"
                         				
                         				elif [ "$message" = "arm" ]; then
-                        			                touch "Armed by SMS by ""${controlusers[c]}"" at ""$(date)"""
+                        			                touch "Armed via SMS by ""${controlusers[c]}"" on ""$(date)"""
                         			               
                         				elif [ "$message" = "disarm" ]; then
                         				        send_message "$contact" "Already Disarmed: $(find -- Disarmed* | head -n1)"
