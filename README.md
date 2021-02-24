@@ -1,9 +1,18 @@
 # RaspAlarm
 
-sms/keypad/door/motion sensor
-WIP
+Alarm system made for the raspberry pi (should work on any version)
 
-A security system made out of a raspberry pi, written fully in bash.
+Written fully in bash so that it is easily modifiable no library or dependencies, other than raspi-gpio which can be avoided if needed by installing physical resistors.
+
+The main script can be used with both or either of the other ones, smscontrol.sh if you want to want to control it via sms messages and keypad.sh if you want to use a keypad.
+
+Alarm.sh – This is the main script, all settings / info is in the alarm.conf file.
+
+Smscontrol.sh – Requires a twilio account to use, an account can be made for free to test, after that the cost is about 1$ a month per number with however much you use, expect about 2-3$ a month if you just arm and disarm it once a day.
+Access – Set the sms control phone numbers, only people that send messages from these numbers will be read by the script, user names can be attached to each phone number and passwords. Passwords aren’t necessary but are suggested as phone numbers can be spoofed. Passwords can be any length and are used after the command “arm 1234” will only work in that format.
+Commands - Arm, Disarm, Status.
+
+Keypad.sh – The keypad this is set up for is a 4x4 matrix keypad, 4 in 4 out pins which are set in the alarm.conf file (can use whichever pins you want). The passwords can be made up of any character and any length other than # as that clears the current password.  It has a built in timeout if no button is pushed for 10 seconds it will clear the password itself.
 
 -----------------------------------------------------------------------
 
