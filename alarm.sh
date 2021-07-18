@@ -229,7 +229,7 @@ echo "Activating Siren Pin"
 echo "$Sirenpin" > /sys/class/gpio/export
 sleep 1.0
 echo "out" > /sys/class/gpio/gpio"$Sirenpin"/direction
-echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
+echo "1" > /sys/class/gpio/gpio"$Sirenpin"/value
 
 
 while :
