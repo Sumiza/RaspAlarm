@@ -194,11 +194,11 @@ function Beep_off {
         beep=0
 }
 function Siren_on {
-        echo "1" > /sys/class/gpio/gpio"$Sirenpin"/value
+        echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
         siren=1
 }
 function Siren_off {
-        echo "0" > /sys/class/gpio/gpio"$Sirenpin"/value
+        echo "1" > /sys/class/gpio/gpio"$Sirenpin"/value
         siren=0
 }
 
