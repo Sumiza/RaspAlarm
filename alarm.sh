@@ -100,11 +100,12 @@ function system_armed {
           while [ "$arm" -ge 0 ]; do
                   if ls Armed* > /dev/null 2>&1; then
                        echo "$arm"
-                       if [ "$red" = "1" ]; then
+                       if [ "$red" = "1" ] || [ "$green" = "1" ] ; then
                                 Red_off
+                                Green_off
                                 Beep_off
                        else
-                                Red_on
+                                Green_on
                                 Beep_on
                        fi
                        ((arm=arm-1))
