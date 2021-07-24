@@ -2,7 +2,7 @@
 rm alarm.sh
 rm keypad.sh
 rm smscontrol.sh
-rm update.sh
+rm startup.sh
 wget https://raw.githubusercontent.com/Sumiza/raspalarm/main/keypad.sh
 wget https://raw.githubusercontent.com/Sumiza/raspalarm/main/alarm.sh
 wget https://raw.githubusercontent.com/Sumiza/raspalarm/main/smscontrol.sh
