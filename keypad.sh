@@ -11,7 +11,6 @@ inpad1=("4" "5" "6" "B")
 inpad2=("7" "8" "9" "C")
 inpad3=("*" "0" "#" "D")
 passhold=""
-epoch=0
 
 for i in "${inkeypins[@]}"; do
           echo "Activating Pin $i"
@@ -28,36 +27,25 @@ for i in "${outkeypins[@]}"; do
           echo "out" > /sys/class/gpio/gpio"$i"/direction
           echo "0" > /sys/class/gpio/gpio"$i"/value
 done
-
 function passcheck {
-        if [ "$1" = "#" ]; then
-                passhold=""
-                echo "clear"
-        else
-                ((epoch=epoch+10))
-                if [ "$EPOCHSECONDS" -gt "$epoch" ]; then
+        passname=0
+        passhold="$passhold$1"
+        for pass in "${passlist[@]}"; do
+                echo "$passhold"
+                if [ "$pass" = "$(echo "$passhold" | rev | cut -b -${#pass} | rev)" ]; then
+                        if ls Armed* > /dev/null 2>&1; then
+                        rm Disarmed*
+                        touch "Disarmed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
+                        rm Armed*
+                        echo "keypad Disarmed by ${passusers[$passname]}"
+                        else
+                                touch "Armed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
+                                echo "keypad Armed by ${passusers[$passname]}"
+                        fi
                         passhold=""
                 fi
-                passhold="$passhold$1"
-                echo "$passhold"
-                passname=0
-                for pass in "${passlist[@]}"; do
-                        if [ "$pass" = "$passhold" ]; then
-                                if ls Armed* > /dev/null 2>&1; then
-                                        rm Disarmed*
-                                        touch "Disarmed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
-                                        rm Armed*
-                                        echo "keypad Disarmed by ${passusers[$passname]}"
-                                else
-                                        touch "Armed via Keypad by ""${passusers[$passname]}"" on ""$(date)"""
-                                        echo "keypad Armed by ${passusers[$passname]}"
-                                fi
-                                passhold=""
-                        fi
-                        ((passname=passname+1))
-                done
-                epoch=$EPOCHSECONDS
-        fi
+                ((passname=passname+1))
+        done
 }
 
 while :
@@ -68,6 +56,7 @@ do
                 for i in "${inkeypins[@]}"; do
                         keydown=$(cat /sys/class/gpio/gpio"$i"/value)
                         if [ "$keydown" = "1" ]; then
+                                echo "0" > /sys/class/gpio/gpio"$beeppin"/value
                                 if [ "$i" = "${inkeypins[0]}" ]; then
                                         passcheck "${inpad0[c]}"
                                 elif  [ "$i" = "${inkeypins[1]}" ]; then
@@ -78,12 +67,9 @@ do
                                         passcheck "${inpad3[c]}"
                                 fi
                                 echo "1" > /sys/class/gpio/gpio"$beeppin"/value
-                                sleep 0.2
-                                echo "0" > /sys/class/gpio/gpio"$beeppin"/value
                         fi
                 done
                 echo "0" > /sys/class/gpio/gpio"$o"/value
                 ((c=c+1))
         done
 done
-
