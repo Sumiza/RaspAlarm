@@ -61,6 +61,11 @@ function system_armed_once {
 function system_disarmed_once {
        echo "Disarmed now"
        echo "$(date)" "$(find -- Disarmed* | head -n1)" >> "$Logfile"
+       Red_off
+       Green_on
+       Beep_on
+       sleep 0.2
+       Beep_off
        for i in "${PhoneNrsDis[@]}"; do
                  echo "SMS sent to Disarmed $i $(find -- Disarmed* | head -n1)"
                  send_sms "$i" "Alarm Disarmed: $(find -- Disarmed* | head -n1)"
@@ -147,16 +152,10 @@ function system_disarmed {
 
 function alarm_countdown {
           echo "alarm countdown..."
+        Red_on
+        Beep_on
           while [ "$dis" -ge 0 ]; do
                   if ls Armed* > /dev/null 2>&1; then
-                           if [ "$red" = "1" ]; then
-                                    Red_off
-                                    Beep_off
-                           else
-                                    Red_on
-                                    Beep_on
-                           fi
-                          echo "$dis" till Alarm
                           ((dis=dis-1))
                           if [ "$dis" -eq 0 ]; then
                                   alarm_trigger "$1"
@@ -187,11 +186,11 @@ function Green_off {
         green=0
 }
 function Beep_on {
-        echo "1" > /sys/class/gpio/gpio"$Beeppin"/value
+        echo "0" > /sys/class/gpio/gpio"$Beeppin"/value
         beep=1
 }
 function Beep_off {
-        echo "0" > /sys/class/gpio/gpio"$Beeppin"/value
+        echo "1" > /sys/class/gpio/gpio"$Beeppin"/value
         beep=0
 }
 function Siren_on {
@@ -224,7 +223,7 @@ echo "Activating Beep Pin"
 echo "$Beeppin" > /sys/class/gpio/export
 sleep 1.0
 echo "out" > /sys/class/gpio/gpio"$Beeppin"/direction
-echo "0" > /sys/class/gpio/gpio"$Beeppin"/value
+echo "1" > /sys/class/gpio/gpio"$Beeppin"/value
 
 echo "Activating Siren Pin"
 echo "$Sirenpin" > /sys/class/gpio/export
